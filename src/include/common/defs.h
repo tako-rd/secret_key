@@ -24,6 +24,7 @@
 //#define ENABLE_SSE4_1
 //#define ENABLE_SSE4_2
 //#define ENABLE_AESNI
+//#define ENABLE_ARMNEON
 
 #if !defined(ENABLE_LITTLE_ENDIAN) && !defined(ENABLE_BIG_ENDIAN)
 # define ENABLE_LITTLE_ENDIAN

@@ -16,7 +16,7 @@
 /* Quoted from below.                                                          */
 /* Federal Information Processing Standards Publication 197  November 26, 2001 */
 /* Announcing the ADVANCED ENCRYPTION STANDARD (AES)                           */
-/* https://info.isl.ntt.co.jp/crypt/camellia/dl/01espec.pdf                    */
+/* https://nvlpubs.nist.gov/nistpubs/FIPS/NIST.FIPS.197.pdf                    */
 /*******************************************************************************/
 
 /**************************************/

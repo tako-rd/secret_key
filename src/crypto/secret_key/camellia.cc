@@ -60,7 +60,7 @@ namespace cryptography {
 # define BENDIAN_8BIT_TO_64BIT_SIZE256(in, out)  memcpy(out, in, 32);
 #endif
 
-#if defined(SPEED_PRIORITY_CAMELLIA)
+#if defined(SPEED_PRIORITIZATION_CAMELLIA)
 static const uint64_t sp64bit1[256] = {
   0x7070700070000070, 0x8282820082000082, 0x2c2c2c002c00002c, 0xececec00ec0000ec,
   0xb3b3b300b30000b3, 0x2727270027000027, 0xc0c0c000c00000c0, 0xe5e5e500e50000e5,
@@ -942,7 +942,7 @@ static const uint64_t sp32bit4404[256] = {
 };
 #endif
 
-#if !defined(SPEED_PRIORITY_CAMELLIA)
+#if !defined(SPEED_PRIORITIZATION_CAMELLIA)
 static const uint8_t left_rschd[6]  = {0, 1, 0, 1, 0, 1};
 static const uint8_t right_rschd[6] = {1, 0, 1, 0, 1, 0};
 #endif
@@ -1006,7 +1006,7 @@ int32_t camellia::encrypt(const uint8_t * const ptext, uint8_t *ctext) noexcept 
   tmptext[1] ^= kw_[1];
 
   for (int32_t round = 0; round <= n6r_; ++round) {
-#if defined(SPEED_PRIORITY_CAMELLIA)
+#if defined(SPEED_PRIORITIZATION_CAMELLIA)
     tmptext[1] ^= f_function(tmptext[0], k_[kpos]);
     ++kpos;
 
@@ -1061,7 +1061,7 @@ int32_t camellia::decrypt(const uint8_t * const ctext, uint8_t *ptext) noexcept 
 
   for (int32_t round = 0; round <= n6r_; ++round) {
 
-#if defined(SPEED_PRIORITY_CAMELLIA)
+#if defined(SPEED_PRIORITIZATION_CAMELLIA)
     tmptext[1] ^= f_function(tmptext[0], k_[kpos]);
     --kpos;
 
@@ -1292,13 +1292,13 @@ inline void camellia::expand_192bit_or_256bit_key(const uint64_t * const key, ui
 inline uint64_t camellia::f_function(uint64_t in, uint64_t key) const noexcept {
   uint64_t tmpy = 0;
   uint64_t zd = 0;
-#if !defined(SPEED_PRIORITY_CAMELLIA)
+#if !defined(SPEED_PRIORITIZATION_CAMELLIA)
   uint8_t y[8] = {0};
 #endif
 
   tmpy = in ^ key;
 
-#if defined(SPEED_PRIORITY_CAMELLIA)
+#if defined(SPEED_PRIORITIZATION_CAMELLIA)
   zd ^= sp64bit1[(uint8_t)(tmpy >> 56) & 0xFF];
   zd ^= sp64bit2[(uint8_t)(tmpy >> 48) & 0xFF];
   zd ^= sp64bit3[(uint8_t)(tmpy >> 40) & 0xFF];
@@ -1358,7 +1358,7 @@ inline void camellia::s_function(uint8_t *x) const noexcept {
 }
 #endif
 
-#if !defined(SPEED_PRIORITY_CAMELLIA)
+#if !defined(SPEED_PRIORITIZATION_CAMELLIA)
 inline void camellia::s_function(uint8_t *x) const noexcept {
   x[0] = sbox1[x[0]];
   x[1] = sbox2[x[1]];

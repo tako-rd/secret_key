@@ -14,7 +14,7 @@
 
 namespace cryptography {
 
-#define SPEED_PRIORITY_CAMELLIA    1
+#define SPEED_PRIORITIZATION_CAMELLIA    1
 
 /* Prototype declaration of class. */
 class camellia_base;
@@ -58,7 +58,7 @@ class camellia final : public camellia_base, public secret_key_base<camellia> {
   uint64_t inv_fl_function(const uint64_t y, const uint64_t kl) const noexcept;
 
   void s_function(uint8_t *x) const noexcept;
-#if !defined(SPEED_PRIORITY_CAMELLIA)
+#if !defined(SPEED_PRIORITIZATION_CAMELLIA)
   void p_function(uint8_t *x) const noexcept;
 #endif
 

@@ -14,7 +14,7 @@
 
 namespace cryptography {
 
-#define SPEED_PRIORITY_SEED   1
+#define SPEED_PRIORITIZATION_SEED   1
 
 /* Prototype declaration of class. */
 class seed_base;

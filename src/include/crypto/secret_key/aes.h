@@ -14,7 +14,7 @@
 
 namespace cryptography {
 
-#define SPEED_PRIORITY_AES    1
+#define SPEED_PRIORITIZATION_AES    1
 
 #if (_M_X64 == 100 || _M_IX86 == 600) || (_X86_ == 1 || __x86_64__ == 1)
 typedef __m128i u128_t;
@@ -61,7 +61,7 @@ class aes final : public aes_base, public secret_key_base<aes> {
  private:
   void expand_key(const uint32_t * const key, uint32_t *encskeys, uint32_t *decskeys) noexcept;
 
-#if !defined(SPEED_PRIORITY_AES)
+#if !defined(SPEED_PRIORITIZATION_AES)
   uint32_t rot_word(uint32_t word) const noexcept;
 
   uint32_t sub_word(uint32_t word) const noexcept;

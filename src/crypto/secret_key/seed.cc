@@ -72,7 +72,7 @@ static const uint32_t kc[16] = {
   0x779B99E3, 0xEF3733C6, 0xDE6E678D, 0xBCDCCF1B, 
 };
 
-#if !defined(SPEED_PRIORITY_SEED)
+#if !defined(SPEED_PRIORITIZATION_SEED)
 static const uint8_t sbox0[256] = {
   0xA9, 0x85, 0xD6, 0xD3, 0x54, 0x1D, 0xAC, 0x25, 
   0x5D, 0x43, 0x18, 0x1E, 0x51, 0xFC, 0xCA, 0x63, 
@@ -392,14 +392,14 @@ inline uint64_t seed::f_function(uint64_t r, uint64_t k) const noexcept {
 }
 
 inline uint32_t seed::g_function(uint32_t r) const noexcept {
-#if !defined(SPEED_PRIORITY_SEED)
+#if !defined(SPEED_PRIORITIZATION_SEED)
   uint32_t z = 0;
   uint8_t z8bit[4] = {0};
 #endif
   uint8_t r8bit[4] = {0};
 
   BENDIAN_32BIT_TO_8BIT_SIZE32(r, r8bit);
-#if !defined(SPEED_PRIORITY_SEED)
+#if !defined(SPEED_PRIORITIZATION_SEED)
   z8bit[3]  = (sbox0[r8bit[3]] & M0)  ^ (sbox1[r8bit[2]] & M1)  ^ (sbox0[r8bit[1]] & M2)  ^ (sbox1[r8bit[0]] & M3);
   z8bit[2]  = (sbox0[r8bit[3]] & M1)  ^ (sbox1[r8bit[2]] & M2)  ^ (sbox0[r8bit[1]] & M3)  ^ (sbox1[r8bit[0]] & M0);
   z8bit[1]  = (sbox0[r8bit[3]] & M2)  ^ (sbox1[r8bit[2]] & M3)  ^ (sbox0[r8bit[1]] & M0)  ^ (sbox1[r8bit[0]] & M1);

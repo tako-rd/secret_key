@@ -132,7 +132,7 @@ static const ALIGNAS(32) uint8_t invsbox[256] = {
   0x17, 0x2b, 0x04, 0x7e, 0xba, 0x77, 0xd6, 0x26, 0xe1, 0x69, 0x14, 0x63, 0x55, 0x21, 0x0c, 0x7d,
 };
 
-#if !defined(SPEED_PRIORITY_AES)
+#if !defined(SPEED_PRIORITIZATION_AES)
 static const ALIGNAS(32) uint8_t gf_mult_table[15][256] = {
   {
     0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
@@ -731,7 +731,7 @@ int32_t aes::initialize(const uint8_t *key, const uint32_t ksize) noexcept {
 }
 
 int32_t aes::encrypt(const uint8_t * const ptext, uint8_t *ctext) noexcept {
-#if defined(SPEED_PRIORITY_AES)
+#if defined(SPEED_PRIORITIZATION_AES)
   uint32_t tmp1[4] = {0};
   uint32_t tmp2[4] = {0};
   uint32_t *encskeys = encskeys_;
@@ -741,7 +741,7 @@ int32_t aes::encrypt(const uint8_t * const ptext, uint8_t *ctext) noexcept {
 
   if (false == has_subkeys_) { return UNSET_KEY_ERROR; }
 
-#if defined(SPEED_PRIORITY_AES)
+#if defined(SPEED_PRIORITIZATION_AES)
   BENDIAN_8BIT_TO_32BIT_SIZE128(ptext, tmp1);
   tmp1[0] = tmp1[0] ^ *(  encskeys);
   tmp1[1] = tmp1[1] ^ *(++encskeys);
@@ -752,7 +752,7 @@ int32_t aes::encrypt(const uint8_t * const ptext, uint8_t *ctext) noexcept {
   add_round_key(0, encskeys_, tmp);
 #endif
 
-#if defined(SPEED_PRIORITY_AES)
+#if defined(SPEED_PRIORITIZATION_AES)
   ENCRYPT_ROUND(tmp1, encskeys, tmp2); /* round  1 */
   ENCRYPT_ROUND(tmp2, encskeys, tmp1); /* round  2 */
   ENCRYPT_ROUND(tmp1, encskeys, tmp2); /* round  3 */
@@ -782,7 +782,7 @@ int32_t aes::encrypt(const uint8_t * const ptext, uint8_t *ctext) noexcept {
   }
 #endif
 
-#if defined(SPEED_PRIORITY_AES)
+#if defined(SPEED_PRIORITIZATION_AES)
   ctext[0]  = sbox[GET_BYTE32(tmp2[0], BYTE00)] ^ (uint8_t)((*(++encskeys) >> 24) & 0x000000FF);
   ctext[1]  = sbox[GET_BYTE32(tmp2[1], BYTE01)] ^ (uint8_t)((*(  encskeys) >> 16) & 0x000000FF);
   ctext[2]  = sbox[GET_BYTE32(tmp2[2], BYTE02)] ^ (uint8_t)((*(  encskeys) >>  8) & 0x000000FF);
@@ -813,7 +813,7 @@ int32_t aes::encrypt(const uint8_t * const ptext, uint8_t *ctext) noexcept {
 }
 
 int32_t aes::decrypt(const uint8_t * const ctext, uint8_t *ptext) noexcept {
-#if defined(SPEED_PRIORITY_AES)
+#if defined(SPEED_PRIORITIZATION_AES)
   uint32_t kpos = nr_ << 2;
   uint32_t tmp1[4] = {0};
   uint32_t tmp2[4] = {0};
@@ -824,7 +824,7 @@ int32_t aes::decrypt(const uint8_t * const ctext, uint8_t *ptext) noexcept {
 
   if (false == has_subkeys_) { return UNSET_KEY_ERROR; }
 
-#if defined(SPEED_PRIORITY_AES)
+#if defined(SPEED_PRIORITIZATION_AES)
   BENDIAN_8BIT_TO_32BIT_SIZE128(ctext, tmp1);
   tmp1[0] = tmp1[0] ^ decskeys[kpos    ];
   tmp1[1] = tmp1[1] ^ decskeys[kpos + 1];
@@ -835,7 +835,7 @@ int32_t aes::decrypt(const uint8_t * const ctext, uint8_t *ptext) noexcept {
   add_round_key(nr_, encskeys_, tmp);
 #endif
 
-#if defined(SPEED_PRIORITY_AES)
+#if defined(SPEED_PRIORITIZATION_AES)
   if (AES192_ROUNDS == nr_) {
     DECRYPT_ROUND(tmp1, 44, decskeys, tmp2); /* round 11 */
     DECRYPT_ROUND(tmp2, 40, decskeys, tmp1); /* round 10 */
@@ -865,7 +865,7 @@ int32_t aes::decrypt(const uint8_t * const ctext, uint8_t *ptext) noexcept {
   }
 #endif
 
-#if defined(SPEED_PRIORITY_AES)
+#if defined(SPEED_PRIORITIZATION_AES)
   ptext[0]  = invsbox[GET_BYTE32(tmp2[0], BYTE00)] ^ (uint8_t)((decskeys[0] >> 24) & 0x000000FF);
   ptext[1]  = invsbox[GET_BYTE32(tmp2[3], BYTE01)] ^ (uint8_t)((decskeys[0] >> 16) & 0x000000FF);
   ptext[2]  = invsbox[GET_BYTE32(tmp2[2], BYTE02)] ^ (uint8_t)((decskeys[0] >>  8) & 0x000000FF);
@@ -916,7 +916,7 @@ inline void aes::expand_key(const uint32_t * const key, uint32_t *encskeys, uint
     tmp = encskeys[j - 1];
 
     if (0 == (j % nk_)) {
-#if defined(SPEED_PRIORITY_AES)
+#if defined(SPEED_PRIORITIZATION_AES)
       tmp = ROTATE_LEFT32(tmp, 8);
       tmp = ((uint32_t)sbox[(tmp >> 24) & 0xFF] << 24 |
              (uint32_t)sbox[(tmp >> 16) & 0xFF] << 16 |
@@ -926,7 +926,7 @@ inline void aes::expand_key(const uint32_t * const key, uint32_t *encskeys, uint
       tmp = sub_word(rot_word(tmp)) ^ rcon[j / nk_];
 #endif
     } else if (nk_ > 6 && 4 == (j % nk_)) {
-#if defined(SPEED_PRIORITY_AES)
+#if defined(SPEED_PRIORITIZATION_AES)
       tmp = ((uint32_t)sbox[(tmp >> 24) & 0xFF] << 24 |
              (uint32_t)sbox[(tmp >> 16) & 0xFF] << 16 |
              (uint32_t)sbox[(tmp >>  8) & 0xFF] <<  8 |
@@ -937,7 +937,7 @@ inline void aes::expand_key(const uint32_t * const key, uint32_t *encskeys, uint
     }
     encskeys[j] = encskeys[j - nk_] ^ tmp;
   }
-#if defined(SPEED_PRIORITY_AES)
+#if defined(SPEED_PRIORITIZATION_AES)
 
   decskeys[0] = encskeys[0];
   decskeys[1] = encskeys[1];
@@ -973,7 +973,7 @@ inline void aes::expand_key(const uint32_t * const key, uint32_t *encskeys, uint
 #endif
 }
 
-#if !defined(SPEED_PRIORITY_AES)
+#if !defined(SPEED_PRIORITIZATION_AES)
 inline uint32_t aes::rot_word(uint32_t word) const noexcept {
   uint32_t out = 0;
   uint8_t tmp_u8[4] = {0};
